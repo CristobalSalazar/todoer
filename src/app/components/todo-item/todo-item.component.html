@@ -1,0 +1,21 @@
+<div class="todo-item">
+	<mat-form-field class="todo-title">
+	  <input
+	  	matInput 
+	  	paceholder="todo"
+		  class="todo-title" 
+		  [class.complete]="todo.completed"
+		  (blur)="onBlur($event)" 
+		  type="text" 
+		  value="{{todo.title}}"
+		>
+	</mat-form-field>
+  <mat-checkbox 
+  	type="checkbox" 
+  	[checked]="todo.completed" 
+  	(change)="change(todo)"
+  ></mat-checkbox>
+  <button mat-icon-button color="accent" (click)="delete(todo)">
+    <mat-icon>close</mat-icon>
+	</button>
+</div>
