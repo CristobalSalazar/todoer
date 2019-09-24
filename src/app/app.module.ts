@@ -26,7 +26,6 @@ import { AngularFireAuth } from 'angularfire2/auth';
 import { environment } from '../environments/environment';
 import { HomeComponent } from './components/home/home.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
-import { TestComponent } from './components/test/test.component';
 
 @NgModule({
   declarations: [
@@ -36,8 +35,7 @@ import { TestComponent } from './components/test/test.component';
     AddTodoComponent,
     ButtonToggleComponent,
     HomeComponent,
-    NavbarComponent,
-    TestComponent
+    NavbarComponent
   ],
 
   imports: [

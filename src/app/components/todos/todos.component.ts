@@ -1,14 +1,40 @@
 import { Component, OnInit } from '@angular/core';
 import Todo from '../../interfaces/Todo';
+import {
+  AngularFirestore,
+  AngularFirestoreDocument,
+  AngularFirestoreCollection
+} from '@angular/fire/firestore';
 
+import { Observable, pipe } from 'rxjs';
+import { tap, map } from 'rxjs/operators';
+import { AuthService } from '../../services/auth.service';
+import { AngularFireAuth } from 'angularfire2/auth';
 @Component({
   selector: 'app-todos',
   templateUrl: './todos.component.html',
   styleUrls: ['./todos.component.scss']
 })
 export class TodosComponent implements OnInit {
-  todos: Todo[] = [];
-  display: Todo[] = [];
+  public display: Todo[] = [];
+  private todos: Todo[] = [];
+  private todos$: Observable<TodoModel>;
+  constructor(
+    private authService: AuthService,
+    private ngFirestore: AngularFirestore,
+    private ngAuth: AngularFireAuth
+  ) {}
+
+  ngOnInit() {
+    this.authService.user$.subscribe(user => {
+      // create the observable;
+      this.todos$ = this.ngFirestore.doc<TodoModel>(`todos/${user.uid}`).valueChanges();
+      this.todos$.subscribe(todos => {
+        this.todos = todos.todos;
+        this.display = todos.todos;
+      });
+    });
+  }
 
   handleFilter(filter: string) {
     switch (filter) {
@@ -34,56 +60,34 @@ export class TodosComponent implements OnInit {
   // Create
   async addTodo(e) {
     if (e.key === 'Enter') {
-      const title: string = e.target.value;
-      const res = await fetch('https://jsonplaceholder.typicode.com/todos', {
-        method: 'post',
-        body: JSON.stringify({ title, completed: false }),
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-      const data: Todo = await res.json();
-      this.todos.unshift(data);
-      e.target.value = '';
+      let title: string = e.target.value;
+      if (!title) {
+        return;
+      } else {
+        this.authService.user$.subscribe(user => {
+          const data: Todo = {
+            uid: user.uid,
+            title,
+            completed: false
+          };
+          const todoCol: AngularFirestoreCollection = this.ngFirestore.collection(
+            'todos/' + user.uid
+          );
+          todoCol.add(data);
+        });
+      }
       e.target.blur();
+      e.target.value = '';
     }
-  }
-
-  // Read
-  async getTodos() {
-    const res = await fetch('https://jsonplaceholder.typicode.com/todos?_limit=10');
-    const data = await res.json();
-    this.todos = data;
-    this.display = data;
   }
 
   // Update
-  async updateTodo(e, todo: Todo) {
-    const title: string = e.target.value;
-    if (title === todo.title) {
-      return;
-    }
-    todo.title = title;
-    const res = await fetch(`https://jsonplaceholder.typicode.com/todos/${todo.id}`, {
-      method: 'put',
-      body: JSON.stringify(todo)
-    });
-    const data = await res.json();
-  }
+  async updateTodo(e, todo: Todo) {}
 
   // Delete
-  async deleteTodo(todo: Todo) {
-    const res = await fetch(`https://jsonplaceholder.typicode.com/todos/${todo.id}`, {
-      method: 'delete'
-    });
-    const data = await res.json();
-    const indx = this.todos.indexOf(todo);
-    if (indx !== -1) {
-      this.todos.splice(indx, 1);
-    }
-  }
+  async deleteTodo(todo: Todo) {}
+}
 
-  ngOnInit() {
-    this.getTodos();
-  }
+interface TodoModel {
+  todos: Todo[];
 }
