@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import  Todo  from "../../interfaces/Todo"
+import Todo from '../../interfaces/Todo';
 @Component({
   selector: 'app-todo-item',
   templateUrl: './todo-item.component.html',
@@ -7,16 +7,16 @@ import  Todo  from "../../interfaces/Todo"
 })
 export class TodoItemComponent implements OnInit {
   @Input() todo;
-  @Output('delete') deleteEvent = new EventEmitter();
-  @Output('onblur') blurEvent = new EventEmitter();
+  @Output() deleteEvent = new EventEmitter();
+  @Output() blurEvent = new EventEmitter();
 
   change(todo: Todo): void {
-  	todo.completed = !todo.completed;
+    todo.completed = !todo.completed;
   }
 
   delete(todo: Todo): void {
-  	this.deleteEvent.emit(todo);
-  } 
+    this.deleteEvent.emit(todo);
+  }
 
   onBlur(e): void {
     this.blurEvent.emit(e);

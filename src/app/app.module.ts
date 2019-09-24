@@ -9,30 +9,35 @@ import { AddTodoComponent } from './components/add-todo/add-todo.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ButtonToggleComponent } from './components/button-toggle/button-toggle.component';
 // Material
-import {MatButtonToggleModule} from '@angular/material/button-toggle';
-import {MatIconModule} from '@angular/material/icon';
-import {MatFormFieldModule} from '@angular/material'
-import {MatInputModule} from '@angular/material/input';
-import {MatCheckboxModule} from '@angular/material/checkbox';
-import {MatListModule} from '@angular/material/list';
-import {MatToolbarModule} from '@angular/material/toolbar';
-import {MatButtonModule} from '@angular/material/button';
-import {MatTabsModule} from '@angular/material/tabs';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material';
+import { MatInputModule } from '@angular/material/input';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatListModule } from '@angular/material/list';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTabsModule } from '@angular/material/tabs';
 // Firebase
-import { AngularFirestoreModule } from '@angular/fire/firestore'
+import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import { AngularFireAuth } from 'angularfire2/auth';
-import { environment } from "../environments/environment";
+import { environment } from '../environments/environment';
+import { HomeComponent } from './components/home/home.component';
+import { NavbarComponent } from './components/navbar/navbar.component';
+import { TestComponent } from './components/test/test.component';
 
 @NgModule({
-  
   declarations: [
     AppComponent,
     TodosComponent,
     TodoItemComponent,
     AddTodoComponent,
     ButtonToggleComponent,
+    HomeComponent,
+    NavbarComponent,
+    TestComponent
   ],
 
   imports: [
@@ -51,9 +56,9 @@ import { environment } from "../environments/environment";
 
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
-    AngularFireAuthModule 
+    AngularFireAuthModule
   ],
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}

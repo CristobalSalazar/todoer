@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 @Component({
   selector: 'app-button-toggle',
@@ -7,13 +7,13 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
   styleUrls: ['./button-toggle.component.scss']
 })
 export class ButtonToggleComponent implements OnInit {
-	@Output('select') public onSelect = new EventEmitter();
-	links = ['All', 'In Progress', 'Completed'];
+  @Output() public selectEvent = new EventEmitter();
+  links = ['All', 'In Progress', 'Completed'];
   activeLink = this.links[0];
 
   onClick(link) {
-  	this.activeLink = link;
-  	this.onSelect.emit(this.activeLink);
+    this.activeLink = link;
+    this.selectEvent.emit(this.activeLink);
   }
 
   ngOnInit() {}

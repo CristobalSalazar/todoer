@@ -11,23 +11,21 @@ export class TodosComponent implements OnInit {
   display: Todo[] = [];
 
   handleFilter(filter: string) {
-    console.log('hello')
-    console.log(filter);
     switch (filter) {
-      case "All": {
+      case 'All': {
         this.display = this.todos;
         break;
       }
-      case "In Progress": {
+      case 'In Progress': {
         this.display = this.todos.filter(todo => {
           return !todo.completed;
-        })
+        });
         break;
       }
-      case "Completed": {
+      case 'Completed': {
         this.display = this.todos.filter(todo => {
           return todo.completed;
-        })
+        });
         break;
       }
     }
@@ -35,25 +33,25 @@ export class TodosComponent implements OnInit {
 
   // Create
   async addTodo(e) {
-    if (e.key === "Enter") {
-      const title:string = e.target.value;
-      const res = await fetch("https://jsonplaceholder.typicode.com/todos", {
-        method: "post",
-        body: JSON.stringify({title: title, completed: false}),
+    if (e.key === 'Enter') {
+      const title: string = e.target.value;
+      const res = await fetch('https://jsonplaceholder.typicode.com/todos', {
+        method: 'post',
+        body: JSON.stringify({ title, completed: false }),
         headers: {
-          "Content-Type": "application/json"
+          'Content-Type': 'application/json'
         }
       });
       const data: Todo = await res.json();
       this.todos.unshift(data);
-      e.target.value = ""
+      e.target.value = '';
       e.target.blur();
     }
   }
 
   // Read
   async getTodos() {
-    const res = await fetch("https://jsonplaceholder.typicode.com/todos?_limit=10");
+    const res = await fetch('https://jsonplaceholder.typicode.com/todos?_limit=10');
     const data = await res.json();
     this.todos = data;
     this.display = data;
@@ -62,10 +60,12 @@ export class TodosComponent implements OnInit {
   // Update
   async updateTodo(e, todo: Todo) {
     const title: string = e.target.value;
-    if (title === todo.title) return;
+    if (title === todo.title) {
+      return;
+    }
     todo.title = title;
     const res = await fetch(`https://jsonplaceholder.typicode.com/todos/${todo.id}`, {
-      method: "put",
+      method: 'put',
       body: JSON.stringify(todo)
     });
     const data = await res.json();
@@ -74,7 +74,7 @@ export class TodosComponent implements OnInit {
   // Delete
   async deleteTodo(todo: Todo) {
     const res = await fetch(`https://jsonplaceholder.typicode.com/todos/${todo.id}`, {
-      method: "delete"
+      method: 'delete'
     });
     const data = await res.json();
     const indx = this.todos.indexOf(todo);

@@ -5,9 +5,8 @@ import { Component, Output, OnInit, EventEmitter } from '@angular/core';
   templateUrl: './add-todo.component.html',
   styleUrls: ['./add-todo.component.scss']
 })
-export class AddTodoComponent implements OnInit{
-	@Output('keyup') keyupEvent = new EventEmitter();
-  keyup(event) {
-  }
+export class AddTodoComponent implements OnInit {
+  @Output() keyupEvent = new EventEmitter();
+  keyup(event) {}
   ngOnInit() {}
 }
