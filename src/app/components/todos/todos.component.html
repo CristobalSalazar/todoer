@@ -1,7 +1,15 @@
 <div class="todos">
-	<app-add-todo (keyup)="addTodo($event)"></app-add-todo>
-	<app-button-toggle (selectEvent)="handleFilter($event)"></app-button-toggle>
-	<app-todo-item class="todo-item" *ngFor="let todo of display" (delete)="deleteTodo(todo)"
-		(onblur)="updateTodo($event, todo)" [todo]="todo">
-	</app-todo-item>
+  <app-add-todo (keyup)="addTodo($event)"></app-add-todo>
+  <app-button-toggle (selectEvent)="handleFilter($event)"></app-button-toggle>
+
+  <div *ngIf="todos$ | async as todos">
+    <app-todo-item
+      class="todo-item"
+      *ngFor="let todo of todos"
+      (delete)="deleteTodo(todo)"
+      (onblur)="updateTodo($event, todo)"
+      [todo]="todo"
+    >
+    </app-todo-item>
+  </div>
 </div>

@@ -1,57 +1,47 @@
-import { Component, OnInit } from '@angular/core';
-import Todo from '../../interfaces/Todo';
+import { Component, OnInit } from "@angular/core";
+import Todo from "../../interfaces/Todo";
 import {
   AngularFirestore,
   AngularFirestoreDocument,
   AngularFirestoreCollection
-} from '@angular/fire/firestore';
-
-import { Observable, pipe } from 'rxjs';
-import { tap, map } from 'rxjs/operators';
-import { AuthService } from '../../services/auth.service';
-import { AngularFireAuth } from 'angularfire2/auth';
+} from "angularfire2/firestore";
+import { Observable, pipe } from "rxjs";
+import { tap, map, switchMap } from "rxjs/operators";
+import { AuthService } from "../../services/auth.service";
+import { AngularFireAuth } from "angularfire2/auth";
+import { auth } from "firebase";
 @Component({
-  selector: 'app-todos',
-  templateUrl: './todos.component.html',
-  styleUrls: ['./todos.component.scss']
+  selector: "app-todos",
+  templateUrl: "./todos.component.html",
+  styleUrls: ["./todos.component.scss"]
 })
 export class TodosComponent implements OnInit {
-  public display: Todo[] = [];
-  private todos: Todo[] = [];
-  private todos$: Observable<TodoModel>;
+  public todos$;
   constructor(
     private authService: AuthService,
     private ngFirestore: AngularFirestore,
     private ngAuth: AngularFireAuth
-  ) {}
-
-  ngOnInit() {
-    this.authService.user$.subscribe(user => {
-      // create the observable;
-      this.todos$ = this.ngFirestore.doc<TodoModel>(`todos/${user.uid}`).valueChanges();
-      this.todos$.subscribe(todos => {
-        this.todos = todos.todos;
-        this.display = todos.todos;
-      });
-    });
+  ) {
+    this.todos$ = this.authService.user$.pipe(
+      switchMap(user => {
+        return this.ngFirestore.collection(`todos/${user.uid}/items`).valueChanges();
+      })
+    );
   }
+
+  ngOnInit() {}
 
   handleFilter(filter: string) {
     switch (filter) {
-      case 'All': {
-        this.display = this.todos;
+      case "All": {
         break;
       }
-      case 'In Progress': {
-        this.display = this.todos.filter(todo => {
-          return !todo.completed;
-        });
+      // in progress
+      case "In Progress": {
         break;
       }
-      case 'Completed': {
-        this.display = this.todos.filter(todo => {
-          return todo.completed;
-        });
+      // completed
+      case "Completed": {
         break;
       }
     }
@@ -59,35 +49,48 @@ export class TodosComponent implements OnInit {
 
   // Create
   async addTodo(e) {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       let title: string = e.target.value;
-      if (!title) {
+      if (!title || title === "") {
         return;
       } else {
-        this.authService.user$.subscribe(user => {
-          const data: Todo = {
-            uid: user.uid,
-            title,
-            completed: false
-          };
-          const todoCol: AngularFirestoreCollection = this.ngFirestore.collection(
-            'todos/' + user.uid
-          );
-          todoCol.add(data);
-        });
+        const uid = this.ngAuth.auth.currentUser.uid;
+        const todoRef = this.ngFirestore.collection(`todos/${uid}/items`).ref.doc();
+        const data = {
+          id: todoRef.id,
+          title,
+          completed: false
+        };
+        todoRef.set(data);
       }
       e.target.blur();
-      e.target.value = '';
+      e.target.value = "";
     }
   }
 
   // Update
-  async updateTodo(e, todo: Todo) {}
+  async updateTodo(e, todo: Todo) {
+    const uid = this.ngAuth.auth.currentUser.uid;
+    const title = e.target.value;
+    if (!title || title === "" || title === todo.title) {
+      e.target.value = todo.title;
+      return;
+    }
+    const data = {
+      title
+    };
+    this.ngFirestore
+      .collection(`todos/${uid}/items`)
+      .doc(todo.id)
+      .set(data, { merge: true });
+  }
 
   // Delete
-  async deleteTodo(todo: Todo) {}
-}
-
-interface TodoModel {
-  todos: Todo[];
+  async deleteTodo(todo: Todo) {
+    const uid = this.ngAuth.auth.currentUser.uid;
+    this.ngFirestore
+      .collection(`todos/${uid}/items`)
+      .doc(todo.id)
+      .delete();
+  }
 }

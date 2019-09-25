@@ -1,13 +1,13 @@
-import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
-import { auth } from 'firebase/app';
-import { AngularFireAuth } from '@angular/fire/auth';
-import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
-import { Observable, of } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
-import { User } from './user.model';
+import { Injectable } from "@angular/core";
+import { Router } from "@angular/router";
+import { auth } from "firebase/app";
+import { AngularFireAuth } from "@angular/fire/auth";
+import { AngularFirestore, AngularFirestoreDocument } from "@angular/fire/firestore";
+import { Observable, of } from "rxjs";
+import { switchMap } from "rxjs/operators";
+import { User } from "./user.model";
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
 export class AuthService {
   public user$: Observable<User>; // Observable
@@ -16,9 +16,11 @@ export class AuthService {
     private afs: AngularFirestore,
     private router: Router
   ) {
+    // create but not subscribe
     this.user$ = this.afAuth.authState.pipe(
       switchMap(user => {
         if (user) {
+          // another observable
           return this.afs.doc<User>(`users/${user.uid}`).valueChanges();
         } else {
           return of(null);
@@ -30,13 +32,13 @@ export class AuthService {
   public async googleSignIn() {
     const provider = new auth.GoogleAuthProvider();
     const credential = await this.afAuth.auth.signInWithPopup(provider);
-    this.router.navigate(['/todos']);
+    this.router.navigate(["/todos"]);
     return this.updateUserData(credential.user);
   }
 
   public async signOut() {
     await this.afAuth.auth.signOut();
-    return this.router.navigate(['/']);
+    return this.router.navigate(["/"]);
   }
 
   private updateUserData(user) {
