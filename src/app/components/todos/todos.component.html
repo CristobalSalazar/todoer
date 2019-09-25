@@ -3,13 +3,8 @@
   <app-button-toggle (selectEvent)="handleFilter($event)"></app-button-toggle>
 
   <div *ngIf="todos$ | async as todos">
-    <app-todo-item
-      class="todo-item"
-      *ngFor="let todo of todos"
-      (delete)="deleteTodo(todo)"
-      (onblur)="updateTodo($event, todo)"
-      [todo]="todo"
-    >
+    <app-todo-item *ngFor="let todo of todos" class="todo-item" (delete)="deleteTodo(todo)"
+      (onblur)="updateTodo($event, todo)" [todo]="todo">
     </app-todo-item>
   </div>
 </div>
