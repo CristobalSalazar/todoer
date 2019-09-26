@@ -10,7 +10,13 @@
       value="{{ todo.title }}"
     />
   </mat-form-field>
-  <mat-checkbox type="checkbox" [checked]="todo.completed" (change)="change(todo)"></mat-checkbox>
+  <mat-checkbox
+    type="checkbox"
+    class="checkbox"
+    [checked]="todo.completed"
+    (click)="checkClick($event)"
+  >
+  </mat-checkbox>
   <button mat-icon-button color="accent" (click)="delete()">
     <mat-icon>close</mat-icon>
   </button>

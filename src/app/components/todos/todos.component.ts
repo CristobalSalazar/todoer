@@ -1,14 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import Todo from '../../interfaces/Todo';
-import {
-  AngularFirestore,
-  AngularFirestoreDocument,
-  AngularFirestoreCollection
-} from 'angularfire2/firestore';
-import { tap, map, switchMap } from 'rxjs/operators';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
+import { tap, filter, map, switchMap } from 'rxjs/operators';
 import { AuthService } from '../../services/auth.service';
 import { AngularFireAuth } from 'angularfire2/auth';
 import * as firebase from 'firebase/app';
+import ITodo from '../../interfaces/ITodo';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-todos',
@@ -16,70 +13,65 @@ import * as firebase from 'firebase/app';
   styleUrls: ['./todos.component.scss']
 })
 export class TodosComponent implements OnInit {
-  public todos$;
+  public todos$: Observable<ITodo[]>;
+  public todos: ITodo[];
+  private todosSubscription: Subscription;
+  private filterMode: string = 'All';
   constructor(
     private authService: AuthService,
-    private ngFirestore: AngularFirestore,
-    private ngAuth: AngularFireAuth
+    private afs: AngularFirestore,
+    private afAuth: AngularFireAuth
   ) {
     this.todos$ = this.authService.user$.pipe(
       switchMap(user => {
-        return this.ngFirestore.collection(`todos/${user.uid}/items`).valueChanges();
+        return this.afs.collection<ITodo>(`todos/${user.uid}/items`).valueChanges();
       }),
       map(arr => {
-        arr.sort((a: any, b: any) => {
-          return a.createdAt > b.createdAt ? -1 : 1;
+        arr.sort((a: ITodo, b: ITodo): number => {
+          if (a.createdAt == null) return -1;
+          if (b.createdAt == null) return 1;
+          return b.createdAt.seconds - a.createdAt.seconds;
         });
         return arr;
       })
     );
   }
+  ngOnInit() {
+    this.todosSubscription = this.todos$.subscribe(todos => {
+      this.todos = todos;
+    });
+  }
+  ngOnDestroy() {
+    this.todosSubscription.unsubscribe();
+  }
+
   getTimestamp() {
     return firebase.firestore.FieldValue.serverTimestamp();
   }
-  ngOnInit() {}
-
-  handleFilter(filter: string) {
-    switch (filter) {
-      case 'All': {
-        break;
-      }
-      // in progress
-      case 'In Progress': {
-        break;
-      }
-      // completed
-      case 'Completed': {
-        break;
-      }
-    }
-  }
-
+  handleFilter(filter: string) {}
   // Create
   async addTodo(e) {
     if (e.key === 'Enter') {
       let title: string = e.target.value;
-      if (!title || title === '') {
+      if (!title) {
         return;
       } else {
-        const uid = this.ngAuth.auth.currentUser.uid;
-        const todoRef = this.ngFirestore.collection(`todos/${uid}/items`).ref.doc();
-        const data = {
-          id: todoRef.id,
+        const uid: string = this.afAuth.auth.currentUser.uid;
+        const ref = this.afs.collection(`todos/${uid}/items`).ref.doc();
+        const data: ITodo = {
+          id: ref.id,
           title,
           completed: false,
           createdAt: this.getTimestamp()
         };
-        todoRef.set(data);
+        await ref.set(data);
       }
       e.target.blur();
       e.target.value = '';
     }
   }
-
-  // Update
-  async updateTodo(e, todo: Todo) {
-    const uid = this.ngAuth.auth.currentUser.uid;
+  updateTodoTitle(e, todo: ITodo) {
+    const uid = this.afAuth.auth.currentUser.uid;
     const title = e.target.value;
     if (!title || title === '' || title === todo.title) {
       e.target.value = todo.title;
@@ -89,15 +81,25 @@ export class TodosComponent implements OnInit {
       title,
       updatedAt: this.getTimestamp()
     };
-    this.ngFirestore
+    this.afs
       .collection(`todos/${uid}/items`)
       .doc(todo.id)
       .set(data, { merge: true });
   }
-  // Delete
-  async deleteTodo(todo: Todo) {
-    const uid = this.ngAuth.auth.currentUser.uid;
-    this.ngFirestore
+  updateTodoCompleted(e, todo: ITodo) {
+    const uid = this.afAuth.auth.currentUser.uid;
+    const data = {
+      completed: !todo.completed,
+      updatedAt: this.getTimestamp()
+    };
+    this.afs
+      .collection(`todos/${uid}/items`)
+      .doc(todo.id)
+      .set(data, { merge: true });
+  }
+  deleteTodo(todo: ITodo) {
+    const uid = this.afAuth.auth.currentUser.uid;
+    this.afs
       .collection(`todos/${uid}/items`)
       .doc(todo.id)
       .delete();
