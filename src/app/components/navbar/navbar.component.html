@@ -6,7 +6,8 @@
     <!-- user is logged in --->
     <div *ngIf="auth.user$ | async as user; else login">
       <mat-menu menu #userProfile="matMenu">
-        <button routerLink="/todos" mat-menu-item>Todos</button>
+        <button routerLink="/" mat-menu-item>Home</button>
+        <button routerLink="/todos" mat-menu-item>My Todos</button>
         <button mat-menu-item (click)="auth.signOut()">Logout</button>
       </mat-menu>
 
