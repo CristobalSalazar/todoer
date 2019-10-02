@@ -1,23 +1,24 @@
-<div class="todo-item">
+<div class="todo-item" [class.complete]="todo.completed">
   <mat-form-field class="todo-title">
     <input
       matInput
       paceholder="todo"
       class="todo-title"
-      [class.complete]="todo.completed"
       (blur)="onBlur($event)"
       type="text"
       value="{{ todo.title }}"
     />
   </mat-form-field>
-  <mat-checkbox
-    type="checkbox"
-    class="checkbox"
-    [checked]="todo.completed"
-    (click)="checkClick($event)"
-  >
-  </mat-checkbox>
-  <button mat-icon-button color="accent" (click)="delete()">
-    <mat-icon>close</mat-icon>
-  </button>
+  <div class="todo-options">
+    <mat-checkbox
+      type="checkbox"
+      class="checkbox"
+      [checked]="todo.completed"
+      (click)="checkClick($event)"
+    >
+    </mat-checkbox>
+    <button mat-icon-button (click)="delete()">
+      <mat-icon>delete</mat-icon>
+    </button>
+  </div>
 </div>

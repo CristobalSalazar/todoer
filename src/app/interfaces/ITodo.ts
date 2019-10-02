@@ -1,7 +1,7 @@
 export default interface Todo {
-  id: string;
+  id?: string;
   title: string;
-  completed: boolean;
-  createdAt: any;
+  completed?: boolean;
+  createdAt?: any;
   updatedAt?: any;
 }

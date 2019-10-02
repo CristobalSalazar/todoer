@@ -1,3 +1,14 @@
-<nav mat-tab-nav-bar color="accent">
-  <a mat-tab-link *ngFor="let link of links" (click)="onClick(link)" [active]="activeLink == link"> {{link}} </a>
-</nav>
+<mat-tab-group
+  mat-align-tabs="center"
+  color="accent"
+  (selectedTabChange)="onTabChange($event)"
+  animationDuration="0ms"
+>
+  <mat-tab *ngFor="let link of links">
+    <ng-template mat-tab-label>
+      <p matBadge="{{ getBadgeFromLink(link) }}" matBadgeOverlap="false" matBadgeColor="accent">
+        {{ link }}&nbsp;
+      </p></ng-template
+    >
+  </mat-tab>
+</mat-tab-group>

@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { TodosComponent } from './components/todos/todos.component';
+import { TodosListComponent } from './components/todos-list/todos-list.component';
 import { TodoItemComponent } from './components/todo-item/todo-item.component';
 import { AddTodoComponent } from './components/add-todo/add-todo.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -18,6 +18,9 @@ import { MatListModule } from '@angular/material/list';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatMenuModule } from '@angular/material/menu';
+
 // Firebase
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireModule } from 'angularfire2';
@@ -30,7 +33,7 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 @NgModule({
   declarations: [
     AppComponent,
-    TodosComponent,
+    TodosListComponent,
     TodoItemComponent,
     AddTodoComponent,
     ButtonToggleComponent,
@@ -51,6 +54,8 @@ import { NavbarComponent } from './components/navbar/navbar.component';
     MatToolbarModule,
     MatButtonModule,
     MatTabsModule,
+    MatMenuModule,
+    MatBadgeModule,
 
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,

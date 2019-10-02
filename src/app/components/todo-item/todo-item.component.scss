@@ -1,23 +1,19 @@
-$app-width: 600px;
 .todo-item {
-	margin: auto;
-	display: flex;
-	justify-content: center;
-	align-content: center;
-	.todo-title {
-		font-size: 1.1rem;
-		width: $app-width;
-	}
-	mat-checkbox {
-		margin: auto 0;
-		margin-right: 1rem;
-		margin-left: 3rem;
-	}
-	button {
-		margin: auto 0;
-	}
-}
-.complete {
-	text-decoration: line-through;
-	color: red;
+  width: 100%;
+  display: flex;
+  margin-bottom: 0.25rem;
+  &.complete {
+    background-color: lightgoldenrodyellow;
+    border-radius: 1rem;
+  }
+  .todo-title {
+    margin: auto;
+    width: 80%;
+  }
+  .todo-options {
+    * {
+      margin: auto;
+      margin-right: 2rem;
+    }
+  }
 }

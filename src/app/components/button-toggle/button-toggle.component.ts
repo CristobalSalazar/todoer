@@ -1,5 +1,5 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { Component, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { TodosService } from '../../services/todos.service';
 
 @Component({
   selector: 'app-button-toggle',
@@ -8,13 +8,29 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 })
 export class ButtonToggleComponent implements OnInit {
   @Output() public selectEvent = new EventEmitter();
-  links = ['All', 'In Progress', 'Completed'];
-  activeLink = this.links[0];
+  private todosSub: any;
 
-  onClick(link) {
-    this.activeLink = link;
-    this.selectEvent.emit(this.activeLink);
+  constructor(private todosService: TodosService) {}
+  links: string[] = ['All', 'In Progress', 'Completed', 'Trash'];
+  badges: number[] = [0, 0, 0, 0];
+
+  onTabChange(event) {
+    this.selectEvent.emit(this.links[event.index]);
   }
 
-  ngOnInit() {}
+  getBadgeFromLink(link: string): number {
+    return this.badges[this.links.indexOf(link)];
+  }
+
+  ngOnInit() {
+    this.todosSub = this.todosService.todos$.subscribe(todos => {
+      this.badges[0] = todos.length;
+      this.badges[1] = todos.filter(el => !el.completed).length;
+      this.badges[2] = todos.filter(el => el.completed).length;
+    });
+  }
+
+  ngOnDestroy() {
+    this.todosSub.unsubscribe();
+  }
 }
