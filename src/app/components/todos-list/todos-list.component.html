@@ -1,7 +1,7 @@
 <mat-toolbar style="height: 8rem; margin-bottom: 3rem;" color="accent"
   ><h1 style="text-align: center; margin: auto;">My Todos</h1></mat-toolbar
 >
-<div class="todos">
+<div class="todos container">
   <app-button-toggle (selectEvent)="handleFilter($event)"></app-button-toggle>
   <div class="todos">
     <app-add-todo (keyup)="addTodo($event)"></app-add-todo>

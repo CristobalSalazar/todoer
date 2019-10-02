@@ -1,5 +1,5 @@
-<div class="home">
-  <h1>todoer</h1>
+<div class="home container">
+  <h1 class="display-1">todoer</h1>
   <div *ngIf="auth.user$ | async as user">
     <button mat-button color="accent" routerLink="/todos">Todos</button>
   </div>

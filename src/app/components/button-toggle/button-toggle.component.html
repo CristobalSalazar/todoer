@@ -6,7 +6,12 @@
 >
   <mat-tab *ngFor="let link of links">
     <ng-template mat-tab-label>
-      <p matBadge="{{ getBadgeFromLink(link) }}" matBadgeOverlap="false" matBadgeColor="accent">
+      <p
+        matBadge="{{ getBadgeFromLink(link) }}"
+        matBadgeOverlap="false"
+        matBadgeSize="small"
+        matBadgeColor="primary"
+      >
         {{ link }}&nbsp;
       </p></ng-template
     >

@@ -1,23 +1,22 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Observable, pipe } from 'rxjs';
-import { TodosService } from '../../services/todos.service';
-import ITodo from '../../interfaces/ITodo';
+import { Component, OnInit, OnDestroy } from "@angular/core";
+import { TodosService } from "../../services/todos.service";
+import ITodo from "../../interfaces/ITodo";
 
 @Component({
-  selector: 'app-todos-list',
-  templateUrl: './todos-list.component.html',
-  styleUrls: ['./todos-list.component.scss']
+  selector: "app-todos-list",
+  templateUrl: "./todos-list.component.html",
+  styleUrls: ["./todos-list.component.scss"]
 })
-export class TodosListComponent implements OnInit {
+export class TodosListComponent implements OnInit, OnDestroy {
   public todos: ITodo[];
-  public filterMode: string = 'All';
+  public filterMode: string = "All";
   private _todos: ITodo[];
   private _todosSubscription: any;
 
   constructor(private todosService: TodosService) {
     this._todosSubscription = todosService.todos$.subscribe(todos => {
       this._todos = todos;
-      this.todos = todos;
+      this.handleFilter(this.filterMode);
     });
   }
   ngOnInit() {}
@@ -27,36 +26,39 @@ export class TodosListComponent implements OnInit {
   }
 
   handleFilter(todoFilter: string) {
+    this.filterMode = todoFilter;
     switch (todoFilter) {
-      case 'All': {
+      case "All": {
         this.todos = this._todos;
+
         break;
       }
-      case 'In Progress': {
+      case "In Progress": {
         this.todos = this._todos.filter(el => !el.completed);
         break;
       }
-      case 'Completed': {
+      case "Completed": {
         this.todos = this._todos.filter(el => el.completed);
       }
     }
   }
 
   addTodo(event: any) {
-    if (event.key === 'Enter') {
+    if (event.key === "Enter") {
       let title: string = event.target.value;
       if (!title) return;
       this.todosService.create({ title });
-      event.target.value = '';
+      event.target.value = "";
     }
   }
 
   updateTodoTitle(event, todo: ITodo) {
-    const title = event.target.value;
+    const title: string = event.target.value;
     if (!title || title === todo.title) {
       event.target.value = todo.title;
       return;
     }
+    todo.title = title;
     this.todosService.update(todo);
   }
 

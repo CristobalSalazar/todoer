@@ -1,13 +1,13 @@
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { AuthService } from './auth.service';
-import { switchMap, map, tap } from 'rxjs/operators';
-import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
-import * as firebase from 'firebase/app';
-import ITodo from '../interfaces/ITodo';
+import { Injectable } from "@angular/core";
+import { Observable } from "rxjs";
+import { AuthService } from "./auth.service";
+import { switchMap, map, tap } from "rxjs/operators";
+import { AngularFirestore, AngularFirestoreCollection } from "angularfire2/firestore";
+import * as firebase from "firebase/app";
+import ITodo from "../interfaces/ITodo";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
 export class TodosService {
   public todos$: Observable<ITodo[]>;
@@ -28,8 +28,7 @@ export class TodosService {
             return b.createdAt.nanoseconds - a.createdAt.nanoseconds;
           } else return secondsDiff;
         });
-      }),
-      tap(arr => console.log(arr))
+      })
     );
   }
 
