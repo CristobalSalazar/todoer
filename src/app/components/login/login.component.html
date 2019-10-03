@@ -1,0 +1,33 @@
+<div style="margin-bottom: 7rem"></div>
+<form>
+  <h1>Login</h1>
+  <br />
+  <mat-form-field>
+    <input
+      matInput
+      [formControl]="emailFormControl"
+      [errorStateMatcher]="matcher"
+      name="email"
+      id="email"
+      type="email"
+      placeholder="Email"
+    />
+    <mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
+      Please enter a valid email address
+    </mat-error>
+    <mat-error *ngIf="emailFormControl.hasError('required')">
+      Email is required.
+    </mat-error>
+  </mat-form-field>
+  <br />
+  <mat-form-field>
+    <input matInput name="password" id="password" type="password" placeholder="Password" />
+  </mat-form-field>
+  <div style="margin-bottom: 1rem"></div>
+  <button type="submit" mat-flat-button color="primary" (click)="emailLogin($event)">Login</button>
+  <br />
+  <p>Or Login with</p>
+  <button mat-icon-button (click)="googleLogin()"><i class="fa fa-google-plus"></i></button>
+  <button mat-icon-button (click)="googleLogin()"><i class="fa fa-github"></i></button>
+  <button mat-icon-button (click)="googleLogin()"><i class="fa fa-facebook"></i></button>
+</form>

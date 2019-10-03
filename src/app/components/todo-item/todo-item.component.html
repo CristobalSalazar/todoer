@@ -1,6 +1,7 @@
 <div class="todo-item" [class.complete]="todo.completed" [class.trashed]="todo.trashed">
   <mat-form-field class="todo-title">
     <input
+      [formControl]=""
       matInput
       paceholder="todo"
       class="todo-title"

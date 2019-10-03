@@ -4,7 +4,7 @@
 
 <div class="todos">
   <app-add-todo (keyup)="addTodo($event)"></app-add-todo>
-  <app-todo-tabs (tabChange)="handleFilter($event)"></app-todo-tabs>
+  <app-todo-tabs (tabChange)="filterTodos($event)"></app-todo-tabs>
   <!-- todo-display -->
   <div>
     <ng-container *ngFor="let todo of getDisplay(); let i = index">

@@ -11,19 +11,18 @@ export class TodosListComponent implements OnInit, OnDestroy {
   // number of elements rendered per page
   public pageLength: number = 5;
   private pageIndex: number = 0;
-
   public greeting: string;
   private greetings: string[] = ['Just todo it.', 'Todo or not todo...', 'Live todo another day.'];
-
   public filteredTodos: ITodo[] = [];
   private _todos: ITodo[];
   private _todosSubscription: any;
+  private filterMode: string = 'All';
 
   constructor(private todosService: TodosService) {
     // initialize base subscription
     this._todosSubscription = todosService.todos$.subscribe(todos => {
       this._todos = todos;
-      this.handleFilter('All');
+      this.filterTodos(this.filterMode);
     });
   }
 
@@ -44,7 +43,8 @@ export class TodosListComponent implements OnInit, OnDestroy {
     return this.filteredTodos.slice(start, end);
   }
 
-  handleFilter(todoFilter: string) {
+  filterTodos(todoFilter: string) {
+    this.filterMode = todoFilter;
     switch (todoFilter) {
       case 'All': {
         this.filteredTodos = this._todos;
