@@ -11,8 +11,8 @@ import ITodo from '../interfaces/ITodo';
 })
 export class TodosService {
   public todos$: Observable<ITodo[]>;
-  public trash$: Observable<ITodo[]>
-  public active$: Observable<ITodo[]>
+  public trash$: Observable<ITodo[]>;
+  public active$: Observable<ITodo[]>;
 
   private collection: AngularFirestoreCollection<ITodo>;
 

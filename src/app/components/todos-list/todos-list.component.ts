@@ -15,7 +15,7 @@ export class TodosListComponent implements OnInit, OnDestroy {
   public greeting: string;
 
   private pageIndex: number = 0;
-  private greetings: string[] = ['Just todo it', 'Todo or not todo...'];
+  private greetings: string[] = ['Just todo it.', 'Todo or not todo...', 'Live todo another day.'];
   private _todos: ITodo[];
   private _todosSubscription: any;
 
