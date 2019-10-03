@@ -1,4 +1,14 @@
+$width: 980px;
+$margin: 0 0 0 20%;
+
+.banner {
+  height: 8rem;
+  margin-bottom: 3rem;
+  h1 {
+    margin: $margin;
+  }
+}
 .todos {
-  width: 980px;
-  margin: auto;
+  width: $width;
+  margin: $margin;
 }

@@ -1,10 +1,11 @@
 <mat-tab-group
-  mat-align-tabs="center"
+  class="tabs"
   color="primary"
-  (selectedTabChange)="onTabChange($event)"
+  mat-align-tabs="center"
   animationDuration="0ms"
+  (selectedTabChange)="onTabChange($event)"
 >
-  <mat-tab *ngFor="let link of links" >
+  <mat-tab *ngFor="let link of links">
     <ng-template mat-tab-label>
       <p
         matBadge="{{ getBadgeFromLink(link) }}"

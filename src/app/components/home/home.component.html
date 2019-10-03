@@ -2,7 +2,7 @@
 <div class="home container">
   <h1 class="heading">Welcome to todoer.</h1>
   <h2>What are you todoing today?</h2>
-  <div class="call-to-action">
+  <div>
     <div *ngIf="auth.user$ | async as user; else login">
       <button mat-raised-button color="primary" routerLink="/todos">My Todos</button>
     </div>

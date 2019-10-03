@@ -8,24 +8,27 @@ import ITodo from '../../interfaces/ITodo';
   styleUrls: ['./todos-list.component.scss']
 })
 export class TodosListComponent implements OnInit, OnDestroy {
-  public display: ITodo[] = [];
-  public filterMode: string = 'All';
-  public maxTodoItems: number = 5;
-  public filteredTodos: ITodo[] = [];
-  public greeting: string;
-
+  // number of elements rendered per page
+  public pageLength: number = 5;
   private pageIndex: number = 0;
+
+  public greeting: string;
   private greetings: string[] = ['Just todo it.', 'Todo or not todo...', 'Live todo another day.'];
+
+  public filteredTodos: ITodo[] = [];
   private _todos: ITodo[];
   private _todosSubscription: any;
 
   constructor(private todosService: TodosService) {
+    // initialize base subscription
     this._todosSubscription = todosService.todos$.subscribe(todos => {
       this._todos = todos;
-      this.handleFilter(this.filterMode);
+      this.handleFilter('All');
     });
   }
+
   ngOnInit() {
+    // set greeting message
     const indx: number = Math.floor(Math.random() * this.greetings.length);
     this.greeting = this.greetings[indx];
   }
@@ -34,15 +37,14 @@ export class TodosListComponent implements OnInit, OnDestroy {
     this._todosSubscription.unsubscribe();
   }
 
-  getDisplay() {
-    const start = this.pageIndex * this.maxTodoItems;
-    let end = start + this.maxTodoItems;
+  getDisplay(): ITodo[] {
+    const start = this.pageIndex * this.pageLength;
+    let end = start + this.pageLength;
     if (this.filteredTodos.length < end) end = this.filteredTodos.length;
-    this.display = this.filteredTodos.slice(start, end);
+    return this.filteredTodos.slice(start, end);
   }
 
   handleFilter(todoFilter: string) {
-    this.filterMode = todoFilter;
     switch (todoFilter) {
       case 'All': {
         this.filteredTodos = this._todos;
@@ -58,12 +60,10 @@ export class TodosListComponent implements OnInit, OnDestroy {
       }
       case 'Trash': {
         this.filteredTodos = this._todos.filter(el => el.trashed);
-        this.getDisplay();
         return;
       }
     }
     this.filteredTodos = this.filteredTodos.filter(el => !el.trashed);
-    this.getDisplay();
   }
 
   addTodo(event: any) {
@@ -75,7 +75,7 @@ export class TodosListComponent implements OnInit, OnDestroy {
     }
   }
 
-  updateTodoTitle(event, todo: ITodo) {
+  setTitle(event, todo: ITodo) {
     const title: string = event.target.value;
     if (!title || title === todo.title) {
       event.target.value = todo.title;
@@ -85,12 +85,12 @@ export class TodosListComponent implements OnInit, OnDestroy {
     this.todosService.update(todo);
   }
 
-  updateTodoCompleted(event, todo: ITodo) {
+  toggleCompleted(todo: ITodo) {
     todo.completed = !todo.completed;
     this.todosService.update(todo);
   }
 
-  trashTodo(todo: ITodo) {
+  toggleTrashed(todo: ITodo) {
     todo.trashed = !todo.trashed;
     this.todosService.update(todo);
   }

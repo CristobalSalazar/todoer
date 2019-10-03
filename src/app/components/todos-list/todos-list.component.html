@@ -1,31 +1,32 @@
-<mat-toolbar style="height: 8rem; margin-bottom: 3rem;" color="primary">
-  <h1 style="text-align: center; margin: auto;">{{ greeting }}</h1>
+<mat-toolbar class="banner" color="primary">
+  <h1>{{ greeting }}</h1>
 </mat-toolbar>
 
-<div class="todos container">
+<div class="todos">
   <app-add-todo (keyup)="addTodo($event)"></app-add-todo>
-  <app-button-toggle (selectEvent)="handleFilter($event)"></app-button-toggle>
-  <div class="todos">
-    <ng-container *ngFor="let todo of display; let i = index">
-      <ng-container *ngIf="i < maxTodoItems">
+  <app-todo-tabs (tabChange)="handleFilter($event)"></app-todo-tabs>
+  <!-- todo-display -->
+  <div>
+    <ng-container *ngFor="let todo of getDisplay(); let i = index">
+      <ng-container *ngIf="i < pageLength">
         <app-todo-item
           class="todo-item"
-          (trash)="trashTodo(todo)"
-          (delete)="deleteTodo(todo)"
-          (onblur)="updateTodoTitle($event, todo)"
-          (check)="updateTodoCompleted($event, todo)"
           [todo]="todo"
+          (completed)="toggleCompleted(todo)"
+          (trash)="toggleTrashed(todo)"
+          (delete)="deleteTodo(todo)"
+          (onTitleBlur)="setTitle($event, todo)"
         >
         </app-todo-item>
       </ng-container>
     </ng-container>
   </div>
-
-  <ng-container *ngIf="filteredTodos.length > maxTodoItems">
+  <!-- pageinator -->
+  <ng-container *ngIf="filteredTodos.length > pageLength">
     <mat-paginator
       (page)="pageEvent($event)"
       [length]="filteredTodos.length"
-      [pageSize]="maxTodoItems"
+      [pageSize]="pageLength"
       hidePageSize
     ></mat-paginator>
   </ng-container>
