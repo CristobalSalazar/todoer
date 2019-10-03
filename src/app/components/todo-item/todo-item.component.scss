@@ -3,17 +3,24 @@
   display: flex;
   margin-bottom: 0.25rem;
   &.complete {
-    background-color: lightgoldenrodyellow;
+    background-color: lighten(lightgreen, 17%);
+    border-radius: 1rem;
+  }
+  &.trashed {
+    background-color: lightgray;
     border-radius: 1rem;
   }
   .todo-title {
     margin: auto;
     width: 80%;
+
+  }
+  mat-checkbox {
+    margin: auto 0;
   }
   .todo-options {
-    * {
-      margin: auto;
-      margin-right: 2rem;
-    }
+    margin: auto;
+    display: flex;
+    justify-content: space-around;
   }
 }

@@ -7,6 +7,7 @@ import Todo from "../../interfaces/ITodo";
 })
 export class TodoItemComponent implements OnInit {
   @Input() todo;
+  @Output("trash") trashEvent = new EventEmitter();
   @Output("delete") deleteEvent = new EventEmitter();
   @Output("onblur") blurEvent = new EventEmitter();
   @Output("check") checkEvent = new EventEmitter();
@@ -21,6 +22,10 @@ export class TodoItemComponent implements OnInit {
 
   onBlur(e): void {
     this.blurEvent.emit(e);
+  }
+
+  trash(): void {
+    this.trashEvent.emit();
   }
 
   ngOnInit() {}

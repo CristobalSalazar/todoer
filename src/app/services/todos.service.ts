@@ -1,16 +1,19 @@
-import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
-import { AuthService } from "./auth.service";
-import { switchMap, map, tap } from "rxjs/operators";
-import { AngularFirestore, AngularFirestoreCollection } from "angularfire2/firestore";
-import * as firebase from "firebase/app";
-import ITodo from "../interfaces/ITodo";
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { AuthService } from './auth.service';
+import { switchMap, map, tap } from 'rxjs/operators';
+import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
+import * as firebase from 'firebase/app';
+import ITodo from '../interfaces/ITodo';
 
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root'
 })
 export class TodosService {
   public todos$: Observable<ITodo[]>;
+  public trash$: Observable<ITodo[]>
+  public active$: Observable<ITodo[]>
+
   private collection: AngularFirestoreCollection<ITodo>;
 
   constructor(auth: AuthService, afs: AngularFirestore) {
@@ -30,6 +33,8 @@ export class TodosService {
         });
       })
     );
+    this.trash$ = this.todos$.pipe(map(arr => arr.filter(todo => todo.trashed)));
+    this.active$ = this.todos$.pipe(map(arr => arr.filter(todo => !todo.trashed)));
   }
 
   async create(todo: ITodo) {
@@ -39,6 +44,7 @@ export class TodosService {
       id: ref.id,
       title: todo.title,
       completed: false,
+      trashed: false,
       createdAt: ts
     };
     await ref.set(data);
@@ -51,6 +57,6 @@ export class TodosService {
   }
 
   async delete(todo: ITodo) {
-    await this.collection.doc(todo.id).delete();
+    this.collection.doc(todo.id).delete();
   }
 }

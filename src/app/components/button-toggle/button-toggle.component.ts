@@ -1,5 +1,6 @@
 import { Component, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { TodosService } from '../../services/todos.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-button-toggle',
@@ -8,11 +9,12 @@ import { TodosService } from '../../services/todos.service';
 })
 export class ButtonToggleComponent implements OnInit {
   @Output() public selectEvent = new EventEmitter();
-  private todosSub: any;
+  private activeTodosSubscription: Subscription;
+  private trashedTodosSubscription: Subscription;
+  public links: string[] = ['All', 'In Progress', 'Completed', 'Trash'];
+  public badges: number[] = [0, 0, 0, 0];
 
   constructor(private todosService: TodosService) {}
-  links: string[] = ['All', 'In Progress', 'Completed', 'Trash'];
-  badges: number[] = [0, 0, 0, 0];
 
   onTabChange(event) {
     this.selectEvent.emit(this.links[event.index]);
@@ -23,14 +25,18 @@ export class ButtonToggleComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.todosSub = this.todosService.todos$.subscribe(todos => {
+    this.activeTodosSubscription = this.todosService.active$.subscribe(todos => {
       this.badges[0] = todos.length;
-      this.badges[1] = todos.filter(el => !el.completed).length;
-      this.badges[2] = todos.filter(el => el.completed).length;
+      this.badges[1] = todos.filter(todo => !todo.completed).length;
+      this.badges[2] = todos.filter(todo => todo.completed).length;
     });
+    this.trashedTodosSubscription = this.todosService.trash$.subscribe(todos => {
+      this.badges[3] = todos.filter(todo => todo.trashed).length;
+    })
   }
 
   ngOnDestroy() {
-    this.todosSub.unsubscribe();
+    this.activeTodosSubscription.unsubscribe();
+    this.trashedTodosSubscription.unsubscribe();
   }
 }

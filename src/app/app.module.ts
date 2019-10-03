@@ -1,35 +1,39 @@
-import { BrowserModule } from "@angular/platform-browser";
-import { NgModule } from "@angular/core";
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
 
-import { AppRoutingModule } from "./app-routing.module";
-import { AppComponent } from "./app.component";
-import { TodosListComponent } from "./components/todos-list/todos-list.component";
-import { TodoItemComponent } from "./components/todo-item/todo-item.component";
-import { AddTodoComponent } from "./components/add-todo/add-todo.component";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { ButtonToggleComponent } from "./components/button-toggle/button-toggle.component";
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
+import { TodosListComponent } from './components/todos-list/todos-list.component';
+import { TodoItemComponent } from './components/todo-item/todo-item.component';
+import { AddTodoComponent } from './components/add-todo/add-todo.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ButtonToggleComponent } from './components/button-toggle/button-toggle.component';
 // Material
-import { MatButtonToggleModule } from "@angular/material/button-toggle";
-import { MatIconModule } from "@angular/material/icon";
-import { MatFormFieldModule } from "@angular/material";
-import { MatInputModule } from "@angular/material/input";
-import { MatCheckboxModule } from "@angular/material/checkbox";
-import { MatListModule } from "@angular/material/list";
-import { MatToolbarModule } from "@angular/material/toolbar";
-import { MatButtonModule } from "@angular/material/button";
-import { MatTabsModule } from "@angular/material/tabs";
-import { MatBadgeModule } from "@angular/material/badge";
-import { MatMenuModule } from "@angular/material/menu";
-import { MatTooltipModule } from "@angular/material/tooltip";
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material';
+import { MatInputModule } from '@angular/material/input';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatListModule } from '@angular/material/list';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSidenavModule } from '@angular/material/sidenav';
 
 // Firebase
-import { AngularFirestoreModule } from "@angular/fire/firestore";
-import { AngularFireModule } from "angularfire2";
-import { AngularFireAuthModule } from "angularfire2/auth";
-import { AngularFireAuth } from "angularfire2/auth";
-import { environment } from "../environments/environment";
-import { HomeComponent } from "./components/home/home.component";
-import { NavbarComponent } from "./components/navbar/navbar.component";
+import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { AngularFireModule } from 'angularfire2';
+import { AngularFireAuthModule } from 'angularfire2/auth';
+import { AngularFireAuth } from 'angularfire2/auth';
+import { environment } from '../environments/environment';
+import { HomeComponent } from './components/home/home.component';
+import { NavbarComponent } from './components/navbar/navbar.component';
+import { ActiveTodosPipe } from './Pipes/active-todos.pipe';
+import { TodosPageComponent } from './components/todos-page/todos-page.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +43,9 @@ import { NavbarComponent } from "./components/navbar/navbar.component";
     AddTodoComponent,
     ButtonToggleComponent,
     HomeComponent,
-    NavbarComponent
+    NavbarComponent,
+    ActiveTodosPipe,
+    TodosPageComponent
   ],
 
   imports: [
@@ -58,6 +64,8 @@ import { NavbarComponent } from "./components/navbar/navbar.component";
     MatMenuModule,
     MatBadgeModule,
     MatTooltipModule,
+    MatPaginatorModule,
+    MatSidenavModule,
 
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,

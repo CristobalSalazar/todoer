@@ -1,4 +1,4 @@
-<div class="todo-item" [class.complete]="todo.completed">
+<div class="todo-item" [class.complete]="todo.completed" [class.trashed]="todo.trashed">
   <mat-form-field class="todo-title">
     <input
       matInput
@@ -9,16 +9,37 @@
       value="{{ todo.title }}"
     />
   </mat-form-field>
+  <mat-checkbox
+    *ngIf="!todo.trashed"
+    type="checkbox"
+    class="checkbox"
+    [checked]="todo.completed"
+    (click)="checkClick($event)"
+  >
+  </mat-checkbox>
   <div class="todo-options">
-    <mat-checkbox
-      type="checkbox"
-      class="checkbox"
-      [checked]="todo.completed"
-      (click)="checkClick($event)"
+    <button
+      *ngIf="!todo.trashed; else remove"
+      matTooltip="Trash"
+      matTooltipPosition="after"
+      mat-icon-button
+      (click)="trash()"
     >
-    </mat-checkbox>
-    <button matTooltip="Trash" matTooltipPosition="after" mat-icon-button (click)="delete()">
       <mat-icon>delete</mat-icon>
     </button>
+
+    <ng-template #remove>
+      <button
+        mat-icon-button
+        matTooltip="Restore from trash"
+        matTooltipPosition="above"
+        (click)="trash()"
+      >
+        <mat-icon>restore_from_trash</mat-icon>
+      </button>
+      <button mat-icon-button matTooltip="Delete" matTooltipPosition="above" (click)="delete()">
+        <mat-icon>remove_circle</mat-icon>
+      </button>
+    </ng-template>
   </div>
 </div>
